@@ -45,12 +45,10 @@ public:
     }
     
     bool search(string word) {
-        cout << "SEARCH " << word << endl; 
         return searchRec(word, head);
     }
 
     bool searchRec(string word, TrieNode *node){
-        cout << " char " << word[0] << endl;
         if(word.size() > 0){
             if(!node->containsKey(word[0])) return false;
             return searchRec(word.substr(1,word.size() - 1), node->getKey(word[0]));
@@ -72,5 +70,32 @@ public:
             }
         }
         return true;
+    }
+
+    //Returns an array of suggestions of size as close to resultCount as possible. 
+    vector<string> search(string prefix, int resultCount) {
+        vector<string> result;
+        TrieNode *current = head;
+        for(char &c : prefix){
+            if(!current->containsKey(c)){
+                return result;
+            }
+            current = current->getKey(c);
+        }
+        return dfs_suggest(prefix, current, resultCount, result);
+    }
+
+    vector<string> dfs_suggest(string prefix, TrieNode *node, int resultCount, vector<string> &result){
+        if(result.size() == resultCount) return result;
+        if(node->isEnd()) result.push_back(prefix);
+        for(char c = 'a'; c <= 'z'; c++){
+            if(node->containsKey(c)){
+                prefix += c;
+                dfs_suggest(prefix, node->getKey(c), resultCount, result);
+                prefix.pop_back();
+            }
+        }
+
+        return result;
     }
 };
