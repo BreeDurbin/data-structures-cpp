@@ -1,2 +1,2 @@
-# data-structures-cpp
+# cpp-snippets
 A collection of data structures, std lib classes and concepts implemented in c++.
